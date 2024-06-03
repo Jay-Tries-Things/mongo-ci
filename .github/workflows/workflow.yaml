@@ -4,7 +4,7 @@ jobs:
     unit-testing:
         runs-on: ubuntu-latest
         container:
-            image: go:latest
+            image: golang:latest
         env: 
             MONGODB_URI: 'mongodb+srv://localhost:27017/'
         services:

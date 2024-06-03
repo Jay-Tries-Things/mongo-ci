@@ -2,15 +2,22 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
 
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
+
+type Restaurant struct {
+	Name         string
+	RestaurantId string        `bson:"restaurant_id,omitempty"`
+	Cuisine      string        `bson:"cuisine,omitempty"`
+	Address      interface{}   `bson:"address,omitempty"`
+	Borough      string        `bson:"borough,omitempty"`
+	Grades       []interface{} `bson:"grades,omitempty"`
+}
 
 func main() {
 
@@ -27,22 +34,11 @@ func main() {
 			log.Fatalf("Could not disconnect from DB")
 		}
 	}()
-
-	coll := client.Database("sample_mflix").Collection("movies")
-	title := "Back to the Future"
-	var result bson.M
-	err = coll.FindOne(context.TODO(), bson.D{{"title", title}}).
-		Decode(&result)
-	if err == mongo.ErrNoDocuments {
-		fmt.Printf("No document was found with the title %s\n", title)
-		return
-	}
+	coll := client.Database("sample_restaurants").Collection("restaurants")
+	newRestaurant := Restaurant{Name: "8282", Cuisine: "Korean"}
+	result, err := coll.InsertOne(context.TODO(), newRestaurant)
 	if err != nil {
 		panic(err)
 	}
-	jsonData, err := json.MarshalIndent(result, "", "    ")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("%s\n", jsonData)
+	fmt.Printf("Document inserted with ID: %s\n", result.InsertedID)
 }

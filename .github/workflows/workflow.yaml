@@ -6,9 +6,9 @@ jobs:
         container:
             image: golang:latest
         env: 
-            MONGODB_URI: 'mongodb+srv://localhost:27017/'
+            MONGODB_URI: 'mongodb://mongo-service:27017/'
         services:
-            mongo:
+            mongo-service:
                 image: mongo:latest
                 ports:
                     - 27017:27017 

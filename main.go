@@ -7,16 +7,12 @@ import (
 	"log"
 	"os"
 
-	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func main() {
-	if err := godotenv.Load(); err != nil {
-		log.Println("Error while retrieving the data")
-	}
 
 	uri := os.Getenv("MONGODB_URI")
 	if uri == "" {
@@ -24,7 +20,7 @@ func main() {
 	}
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
 	if err != nil {
-		log.Fatalf("Could not connect to DB")
+		log.Fatalf(err.Error())
 	}
 	defer func() {
 		if err := client.Disconnect(context.TODO()); err != nil {

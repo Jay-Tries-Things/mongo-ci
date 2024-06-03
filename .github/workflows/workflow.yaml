@@ -1,0 +1,19 @@
+name: New MongoDB Service Workflow
+on: push
+jobs:
+    unit-testing:
+        runs-on: ubuntu-latest
+        container:
+            image: go:latest
+        env: 
+            MONGODB_URI: 'mongodb+srv://localhost:27017/'
+        services:
+            mongo:
+                image: mongodb:latest
+                ports:
+                    - 27017:27017 
+        steps:
+            - name: Checkout Repo
+              uses: actions/checkout@v4
+            - name: run go program
+              run: go run ./...

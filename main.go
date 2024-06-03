@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -36,9 +37,16 @@ func main() {
 	}()
 	coll := client.Database("sample_restaurants").Collection("restaurants")
 	newRestaurant := Restaurant{Name: "8282", Cuisine: "Korean"}
-	result, err := coll.InsertOne(context.TODO(), newRestaurant)
+	_, err = coll.InsertOne(context.TODO(), newRestaurant)
 	if err != nil {
-		panic(err)
+		log.Fatalf(err.Error())
 	}
-	fmt.Printf("Document inserted with ID: %s\n", result.InsertedID)
+	filter := bson.D{{"name", "8282"}}
+	// Retrieves the first matching document
+	var result Restaurant
+	err = coll.FindOne(context.TODO(), filter).Decode(&result)
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
+	fmt.Printf("Document inserted with ID: %v\n", result)
 }

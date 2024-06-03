@@ -9,7 +9,7 @@ jobs:
             MONGODB_URI: 'mongodb+srv://localhost:27017/'
         services:
             mongo:
-                image: mongodb:latest
+                image: mongo:latest
                 ports:
                     - 27017:27017 
         steps:
